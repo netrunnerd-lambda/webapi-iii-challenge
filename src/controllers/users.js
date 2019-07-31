@@ -37,8 +37,15 @@ async function posts(req, res, next) {
   }
 }
 
+async function add(req, res, next) {
+  try {
+    const newUser = await db.insert(req.body);
+    if (newUser) res.status(201).json({ newUser, success: true });
+  } catch (error) {
+    next({ code: 500, message: "User could not be created." });
+  }
+}
+
 module.exports = {
-  all,
-  one,
-  posts 
+  all, one, posts, add
 };
