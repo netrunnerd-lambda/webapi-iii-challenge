@@ -16,19 +16,41 @@ async function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
-  const user = req.body;
-  const length = Object.keys(user).length;
+  try {
+    const user = req.body;
+    const length = Object.keys(user).length;
+  
+    if (length === 0)
+      next({ code: 400, message: "Missing user data." });
+  
+    if (length > 0 && !user.name)
+      next({ code: 400, message: "Missing required name field." });
+    
+    next();
+  } catch (error) {
+    next({ code: 500, message: "User could not be validated." });
+  }
+}
 
-  if (length === 0)
-    next({ code: 400, message: "Missing user data." });
+function validatePost(req, res, next) {
+  try {
+    const post = req.body;
+    const length = Object.keys(post).length;
 
-  if (length > 0 && !user.name)
-    next({ code: 400, message: "Missing required name field." });
+    if (length === 0)
+      next({ code: 400, message: "Missing post data." });
+    
+    if (length > 0 && !post.text)
+      next({ code: 400, message: "Missing required text field." });
 
-  next();
+    next();
+  } catch (error) {
+    next({ code: 500, message: "Post could not be validated." });
+  }
 }
 
 module.exports = {
   validateUserId,
-  validateUser
+  validateUser,
+  validatePost
 };

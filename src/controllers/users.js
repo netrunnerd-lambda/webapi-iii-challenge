@@ -1,8 +1,9 @@
-const db = require('../models/users');
+const pm = require('../models/posts');
+const um = require('../models/users');
 
 async function all(req, res, next) {
   try {
-    const users = await db.get();
+    const users = await um.get();
 
     if (users.length === 0) 
       next({ code: 404, message: "Users do not exist." });
@@ -26,7 +27,7 @@ function one(req, res) {
 
 async function posts(req, res, next) {
   try {
-    const posts = await db.getUserPosts(req.user.id);
+    const posts = await um.getUserPosts(req.user.id);
 
     if (posts.length === 0)
       next({ code: 404, message: "User hasn't made any posts." });
@@ -39,13 +40,27 @@ async function posts(req, res, next) {
 
 async function add(req, res, next) {
   try {
-    const newUser = await db.insert(req.body);
+    const newUser = await um.insert(req.body);
     if (newUser) res.status(201).json({ newUser, success: true });
   } catch (error) {
     next({ code: 500, message: "User could not be created." });
   }
 }
 
+async function addPost(req, res, next) {  
+  const { id } = req.user;
+  const { text } = req.body;
+  
+  const post = { text, user_id: id };
+
+  try {
+    const newPost = await pm.insert(post);
+    if (newPost) res.status(201).json({ newPost, success: true });
+  } catch (error) {
+    next({ code: 500, message: "Post could not be created." });
+  }
+}
+
 module.exports = {
-  all, one, posts, add
+  all, one, posts, add, addPost
 };
