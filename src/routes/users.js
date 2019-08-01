@@ -13,5 +13,6 @@ router.get('/:id', validateUserId, users.one);
 router.get('/:id/posts', validateUserId, users.posts);
 router.post('/', validateUser, users.add);
 router.post('/:id/posts', validateUserId, validatePost, users.addPost);
+router.put('/:id', validateUserId, validateUser, users.update);
 
 module.exports = router;

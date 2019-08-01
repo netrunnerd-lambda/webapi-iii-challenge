@@ -61,6 +61,21 @@ async function addPost(req, res, next) {
   }
 }
 
+async function update(req, res, next) {
+  const { id } = req.user;
+
+  try {
+    const updated = await um.update(id, req.body);
+
+    if (updated) {
+      const user = await um.getById(id);
+      res.status(200).json({ user, success: true });
+    }
+  } catch (error) {
+    next({ code: 500, message: "User could not be modified." });
+  }
+}
+
 module.exports = {
-  all, one, posts, add, addPost
+  all, one, posts, add, addPost, update
 };
