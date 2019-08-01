@@ -76,6 +76,18 @@ async function update(req, res, next) {
   }
 }
 
+async function remove(req, res, next) {
+  const { id } = req.user;
+
+  try {
+    const removed = await um.remove(id);
+    if (removed) res.status(200).json({ message: `User ${id} removed.`, success: true });
+  } catch (error) {
+    next({ code: 500, message: "User could not be removed." });
+  }
+}
+
 module.exports = {
-  all, one, posts, add, addPost, update
+  all, one, posts, 
+  add, addPost, update, remove
 };
