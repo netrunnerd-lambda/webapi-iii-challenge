@@ -1,3 +1,4 @@
+const posts = require('../models/posts');
 const users = require('../models/users');
 
 async function validateUserId(req, res, next) {
@@ -13,7 +14,7 @@ async function validateUserId(req, res, next) {
   } catch (error) {
     next({ code: 500, message: "User could not be validated." });
   }
-};
+}
 
 function validateUser(req, res, next) {
   try {
@@ -29,6 +30,21 @@ function validateUser(req, res, next) {
     next();
   } catch (error) {
     next({ code: 500, message: "User could not be validated." });
+  }
+}
+
+async function validatePostId(req, res, next) {
+  try {
+    const post = await posts.getById(req.params.id);
+
+    if (!post) {
+      next({ code: 400, message: "Post ID is invalid." });
+    } else {
+      req.post = post;
+      next();
+    }
+  } catch (error) {
+    next({ code: 500, message: "Post could not be validated." });
   }
 }
 
@@ -52,5 +68,6 @@ function validatePost(req, res, next) {
 module.exports = {
   validateUserId,
   validateUser,
+  validatePostId,
   validatePost
 };

@@ -13,6 +13,17 @@ async function all(req, res, next) {
   }
 }
 
+async function one(req, res, next) {
+  const post = req.post;
+
+  res
+    .status(200)
+    .json({
+      post,
+      success: true
+    });
+}
+
 module.exports = {
-  all
+  all, one
 };
