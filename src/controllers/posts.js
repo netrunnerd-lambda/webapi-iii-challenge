@@ -24,6 +24,22 @@ async function one(req, res, next) {
     });
 }
 
+async function update(req, res, next) {
+  const { id } = req.post;
+
+  try {
+    const updated = await pm.update(id, req.body);
+
+    if (updated) {
+      const post = await pm.getById(id);
+      res.status(200).json({ post, success: true });
+    }
+  } catch (error) {
+    next({ code: 500, message: "Post could not be modified." });
+  }
+}
+
 module.exports = {
-  all, one
+  all, one,
+  update
 };
