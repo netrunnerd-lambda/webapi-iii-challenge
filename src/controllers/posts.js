@@ -39,7 +39,18 @@ async function update(req, res, next) {
   }
 }
 
+async function remove(req, res, next) {
+  const { id } = req.post;
+
+  try {
+    const removed = await pm.remove(id);
+    if (removed) res.status(200).json({ message: `Post ${id} removed.`, success: true });
+  } catch (error) {
+    next({ code: 500, message: "Post could not be removed." });
+  }
+}
+
 module.exports = {
   all, one,
-  update
+  update, remove
 };
